@@ -22,10 +22,11 @@ describe 'Product Images', js: true do
         visit spree.admin_product_images_path(product)
         click_link "new_image_link"
         attach_file('image_attachment', file_path)
-        check "master_option"
-        check other_variant.option_values.first.presentation
+        # check "master_option"
 
         p page.body
+
+        check other_variant.option_values.first.presentation
 
         click_button "Update"
 
