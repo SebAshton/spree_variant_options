@@ -1,5 +1,4 @@
-Spree::Core::Engine.routes.append do
-
+Spree::Core::Engine.routes.draw do
   namespace :admin do
     resources :option_values do
       member do
@@ -7,5 +6,4 @@ Spree::Core::Engine.routes.append do
       end
     end
   end
-
 end
