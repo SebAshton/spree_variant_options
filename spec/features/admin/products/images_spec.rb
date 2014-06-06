@@ -25,6 +25,7 @@ describe 'Product Images', js: true do
         check other_variant.option_values.first.presentation
 
         click_button "Update"
+        p page.body
         page.should have_content("successfully created!")
 
         within("table.index") do
