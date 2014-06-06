@@ -24,7 +24,12 @@ describe 'Product Images', js: true do
         attach_file('image_attachment', file_path)
         check other_variant.option_values.first.presentation
 
+        p page.body
+
         click_button "Update"
+
+        p page.body
+
         page.should have_content("successfully created!")
 
         within("table.index") do
