@@ -27,13 +27,9 @@ describe 'Product Images', js: true do
         p page.body
 
         click_button "Update"
-<<<<<<< HEAD
 
         p page.body
 
-=======
-        p page.body
->>>>>>> 402fcc66a3f2f8ec0f3d6d3724bf02e662ecf130
         page.should have_content("successfully created!")
 
         within("table.index") do
