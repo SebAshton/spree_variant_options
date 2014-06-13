@@ -1,3 +1,7 @@
+var show_all_variant_images = function() {
+  $('li.vtmb').show();
+}
+
 var show_variant_images = function(variants_ids) {
   if (typeof(variants_ids) == 'number') {
     variants_ids = [variants_ids]
@@ -25,8 +29,4 @@ var show_variant_images = function(variants_ids) {
       $("#main-image").data('selectedThumbId', thumb.attr('id'));
     }
   });
-}
-
-var show_all_variant_images = function() {
-  $('li.vtmb').show();
 }
