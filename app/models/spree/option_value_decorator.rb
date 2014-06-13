@@ -1,4 +1,5 @@
 Spree::OptionValue.class_eval do
+  attr_accessible :image, :image_file_name
 
   has_attached_file :image,
     :styles        => ActiveSupport::JSON.decode(Spree::Config[:attachment_styles]).symbolize_keys!,
