@@ -20,14 +20,15 @@ Spree::Admin::ImagesController.class_eval do
       option_values_array.each do |option_value|
         option_values_combinations = option_values_combinations.product(option_value)
       end
-      option_values_combinations = option_values_combinations.map(&:flatten) if option_values_combinations.count > 1
+
+      option_values_combinations = option_values_combinations.flatten if option_values_combinations.count > 1
 
       @product.variants.each do |variant|
         option_values_combinations.each do |ov_combination|
           variant_option_ids = variant.option_values.pluck(:id)
 
           if ([ov_combination].flatten - variant_option_ids).empty?
-            create_image(variant, permitted_resource_params)
+            create_image(variant, params[:image])
           end
         end
       end
@@ -41,7 +42,7 @@ Spree::Admin::ImagesController.class_eval do
   private
 
   def create_image(variant, image_attributes)
-    image = Spree::Image.new(permitted_resource_params)
+    image = Spree::Image.new(image_attributes)
     image.viewable_type = 'Spree::Variant'
     image.viewable_id = variant.id
     variant.images << image
