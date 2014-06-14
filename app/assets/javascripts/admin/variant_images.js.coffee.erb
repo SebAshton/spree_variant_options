@@ -1,5 +1,8 @@
 $ ->
-  images = $('#images, [data-hook="edit_image"]')
+  images = $('#images')
+
+  if $('form.edit_image').size
+    images = $('form.edit_image').parent()
 
   images.on 'change', '#master_option', ->
     $('.option-value, .option-type', images).prop 'disabled', (i, val) -> !val
