@@ -68,7 +68,7 @@ describe 'Product Images', js: true do
         click_link "new_image_link"
         attach_file('image_attachment', file_path)
 
-        p page.body
+        click_button "Update"
 
         page.should have_content('One Option Per Type Must Be Selected')
       end
