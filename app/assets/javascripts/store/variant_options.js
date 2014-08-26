@@ -239,7 +239,6 @@ function VariantOptions(params) {
     selection = [];
     var a = $(this);
     if (!parent.has(a).length) {
-      $(parent).css('background', 'red');
       clear(divs.index(a.parents('.variant-options:first')));
     }
     disable(buttons);
