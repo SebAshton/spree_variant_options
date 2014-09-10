@@ -46,6 +46,7 @@ function VariantOptions(params) {
   function init() {
     divs = $('#product-variants .variant-options');
     disable(divs.find('a.option-value').addClass('locked'));
+
     update();
     enable(parent.find('a.option-value'));
     toggle();
@@ -147,7 +148,7 @@ function VariantOptions(params) {
         }
       }
     } catch(error) {
-      // console.log(error)
+      //console.log(error);
     }
     return variants;
   }
@@ -183,7 +184,7 @@ function VariantOptions(params) {
       $('#variant_id, form[data-form-type="variant"] input[name$="[variant_id]"]').val(variant.id);
       $('#product-price .price').removeClass('unselected').text(variant.price);
       if (variant.in_stock)
-        $('#cart-form button[type=submit]').attr('disabled', false).fadeTo(100, 1);
+        $('#cart-form button[type=submit]').attr('disabled', false).fadeTo(0, 1);
       $('form[data-form-type="variant"] button[type=submit]').attr('disabled', false).fadeTo(100, 1);
       try {
         show_variant_images(variant.id);
@@ -196,7 +197,6 @@ function VariantOptions(params) {
         variants_ids = $.keys(variants);
         show_variant_images(variants_ids);
       }
-
 
       $('#variant_id, form[data-form-type="variant"] input[name$="[variant_id]"]').val('');
       $('#cart-form button[type=submit], form[data-form-type="variant"] button[type=submit]').attr('disabled', true).fadeTo(0, 0.5);
@@ -219,12 +219,7 @@ function VariantOptions(params) {
       $(element).find('h6 strong.selection').html('').removeClass('out-of-stock');
     });
     parent.find('strong.selection').html('').removeClass('out-of-stock');
-
-    try {
-      show_all_variant_images();
-    } catch(error) {
-      // depends on modified version of product.js
-    }
+    show_all_variant_images();
   }
 
 
@@ -237,9 +232,11 @@ function VariantOptions(params) {
     evt.preventDefault();
     variant = null;
     selection = [];
+    var index = 0;
     var a = $(this);
     if (!parent.has(a).length) {
-      clear(divs.index(a.parents('.variant-options:first')));
+      index = divs.index(a.parents('.variant-options:first'));
+      clear(index);
     }
     disable(buttons);
     var a = enable(a.addClass('selected'));
@@ -249,19 +246,64 @@ function VariantOptions(params) {
 
     variants = find_variant();
     toggle(variants);
+
+    if( index == 0 ) {
+      autoselect_next_option( $(this), index );
+    }
+  }
+
+  function autoselect_next_option( a, index ) {
+    var value_options = a.parent().parent().parent().parent().find('.variant-options');
+    var options = value_options[index+1];
+    var item = $(options).find('.option-value:first');
+    item.click();
   }
 
   function handle_selected() {
     var selected = divs.find('a.selected');
     selected.each(function(){
-      $this = $(this)
-      var selection = $this.parents('.variant-options').find('h6 strong.selection')
+      $this = $(this);
+      var selection = $this.parents('.variant-options').find('h6 strong.selection');
       selection.html($this.attr('title'));
 
       if ($this.hasClass('out-of-stock'))
         selection.addClass('out-of-stock').attr('title', i18n.out_of_stock);
     });
-  };
-
+  }
   $(document).ready(init);
+
+}
+
+
+var show_all_variant_images = function () {
+  $('li.vtmb').show();
+};
+
+var show_variant_images = function(variants_ids) {
+  if (typeof(variants_ids) == 'number') {
+    variants_ids = [variants_ids];
+  }
+
+  $('li.vtmb').hide();
+  $(variants_ids).each(function(index, variant_id){
+    $('li.tmb-' + variant_id).show();
+
+    var currentThumb = $('.vtmb.selected');
+
+    // if currently selected thumb does not belong to current variant, nor to common images,
+    // hide it and select the first available thumb instead.
+    if(!currentThumb.hasClass('vtmb-' + variant_id)) {
+      //var thumb = $($('ul.thumbnails li:visible').eq(0));
+      var thumb = $($("ul.thumbnails li.vtmb-" + variant_id + ":first").eq(0));
+      if (thumb.length === 0) {
+        thumb = $($('ul.thumbnails li:visible').eq(0));
+      }
+      var newImg = thumb.find('a').attr('href');
+      $('ul.thumbnails li').removeClass('selected');
+      thumb.addClass('selected');
+      $('#main-image img').attr('src', newImg);
+      $("#main-image").data('selectedThumb', newImg);
+      $("#main-image").data('selectedThumbId', thumb.attr('id'));
+    }
+  });
 };
